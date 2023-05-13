@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\KendaraanController;
+use App\Http\Controllers\UserController;
+use App\Models\Kendaraan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +21,15 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::group(['prefix' => 'auth'], function(){
-    Route::post("login", );
+Route::prefix("auth")->group(function(){
+    Route::post("/login", [UserController::class, 'Login']);
+    Route::post("/register", [UserController::class, 'Register']);
+    Route::post("/logout", [UserController::class, 'Logout']);
+});
+
+Route::prefix("kendaraan")->middleware('jwt.verify')->group(function(){
+    Route::get("/all", [KendaraanController::class, "GetAll"]);
+    Route::get("/{{id}}", [KendaraanController::class, "GetById"]);
+    Route::post("/create", [KendaraanController::class, "Create"]);
+    Route::post("/update/{id}", [KendaraanController::class, "Update"]);
 });
